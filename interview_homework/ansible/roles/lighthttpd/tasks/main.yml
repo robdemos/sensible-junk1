@@ -1,0 +1,8 @@
+- include: centos.yml
+  when: ansible_os_family == "RedHat"
+
+- include: deploy.yml
+  when: ansible_os_family == "RedHat"
+
+- include: config_lighttpd.yml
+  when: ansible_os_family == "RedHat"

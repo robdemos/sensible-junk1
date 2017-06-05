@@ -1,0 +1,28 @@
+# Install dependencies
+- name: CentOS | enabling EPEL repo
+  yum:
+    name: "epel-release"
+    state: present
+  when: ansible_distribution == 'CentOS'
+
+- name: CentOS | installing lighttpd
+  yum:
+    name: "lighttpd"
+    state: present
+  when: ansible_distribution == 'CentOS'
+
+- name: CentOS | ensuring lighttpd is enabled and started
+  service:
+    name: "lighttpd"
+    state: started
+    enabled: yes
+
+- name: Install Python Pip
+  yum:
+    name: python-pip
+    state: present
+
+- name: Install boto
+  pip:
+    name: boto
+    version: 2.46.1

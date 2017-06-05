@@ -1,0 +1,37 @@
+var.cache_dir = "/var/cache/lighttpd"
+var.conf_dir = "/etc/lighttpd"
+var.home_dir = "/var/lib/lighttpd"
+var.log_root = "{{ log_root }}"
+var.server_root = "{{ lighttpd_centos_info.server_root }}"
+var.socket_dir = home_dir + "/sockets"
+var.state_dir = "/var/run"
+var.vhosts_dir = "{{ vhost_dir }}"
+
+index-file.names += (
+{% for item in lighttpd_centos_info.index_filenames %}"{{ item }}"{% if not loop.last %}, {% endif %}{% endfor %}
+)
+
+server.document-root = server_root + "/lighttpd"
+server.errorlog = log_root + "/error.log"
+server.event-handler = "linux-sysepoll"
+server.follow-symlink = "enable"
+server.max-connections = {{ lighttpd_centos_info.max_connections }}
+server.network-backend = "sendfile"
+server.pid-file = state_dir + "/lighttpd.pid"
+server.port = {{ lighttpd_server_port }}
+server.stat-cache-engine = "simple"
+server.upload-dirs = ( "/var/tmp" )
+server.username  = "lighttpd"
+server.groupname = "lighttpd"
+url.access-deny = ( "~", ".inc" )
+static-file.exclude-extensions = ( ".php", ".pl", ".fcgi", ".scgi" )
+
+{% for item in lighttpd_centos_info.include %}
+include "{{ item }}"
+{% endfor %}
+
+{% for domain in domains %}
+include "/etc/lighttpd/vhosts.d/{{ domain }}.conf"
+{% endfor %}
+
+#include_shell "cat /etc/lighttpd/vhosts.d/*.conf"

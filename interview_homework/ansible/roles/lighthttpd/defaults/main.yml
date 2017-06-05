@@ -1,0 +1,26 @@
+#some defaults to expand on
+lighttpd_server_port: 80
+config_lighttpd: true
+lighttpd_config_file: 'lighttpd.conf'
+
+lighttpd_centos_info:
+  include:
+    - 'modules.conf'
+    - 'conf.d/access_log.conf'
+    - 'conf.d/debug.conf'
+    - 'conf.d/mime.conf'
+    - 'conf.d/dirlisting.conf'
+    #- 'conf.d/simple_vhost.conf'
+  index_filenames:
+    - 'index.xhtml'
+    - 'index.html'
+    - 'index.htm'
+    - 'default.htm'
+  server_root: '/var/www'
+  max_connections: 1024
+
+domains:
+  - "bogusapp"
+  
+vhost_dir: "/etc/lighttpd//vhosts.d"
+log_root: /var/log/lighttpd

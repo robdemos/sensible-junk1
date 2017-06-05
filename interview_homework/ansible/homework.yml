@@ -1,0 +1,6 @@
+---
+- hosts: all
+  roles:
+    - role: lighthttpd
+  tasks:
+  - debug: msg="Here goes the neighborhood"

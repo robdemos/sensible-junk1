@@ -1,0 +1,38 @@
+- name: Create web app directory
+  file:
+    path: "{{ lighttpd_centos_info.server_root }}/{{ item }}"
+    state: directory
+    owner: lighttpd
+    group: lighttpd
+    mode: 0700
+    recurse: yes
+  with_items:
+    "{{ domains }}"
+
+
+#loop in the future once archive names can map to doc root directories
+- name: Get s3 tar
+  s3:
+    aws_access_key: AKIAJH2C7CAWKL7BLTBA
+    aws_secret_key: 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
+    bucket: bogus-app-homework
+    object: homework.tar.gz
+    dest: "{{ lighttpd_centos_info.server_root }}/{{ item }}/homework.tar"
+    mode: get
+    overwrite: different
+  with_items:
+    "{{ domains }}"
+
+
+- unarchive:
+    src: "{{ lighttpd_centos_info.server_root }}/{{ item }}/homework.tar"
+    dest: "{{ lighttpd_centos_info.server_root }}/{{ item }}"
+    copy: no
+    keep_newer: yes
+  with_items:
+    "{{ domains }}"
+
+
+- name: RUN THIS TO GET DEFAULT lighttpd page
+  debug:
+    msg: "curl -v -H 'Host: homework' 192.168.52.101"

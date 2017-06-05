@@ -1,0 +1,22 @@
+#Configure lighttd and add vhost
+- name: Configure lighttpd
+  template:
+    src: "lighttpd.conf.j2"
+    dest: "/etc/lighttpd/{{ lighttpd_config_file }}"
+    owner: lighttpd
+    group: lighttpd
+    mode: 0644
+  notify:
+    - restart lighttpd
+
+- name: Add vhosts conf
+  template:
+    src: "vhost.j2"
+    dest: "/etc/lighttpd/vhosts.d/{{ item }}.conf"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart lighttpd
+  with_items:
+    "{{ domains }}"
